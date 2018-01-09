@@ -23,7 +23,7 @@ missingVersions.forEach(([pkg, version]) => {
   }
   if (packages[pkg]) {
     const oneVersion = locks[packages[pkg][0]].version
-    console.log(`Package ${pkg} needs to be updated to match ${version} (found ${oneVersion}`)
+    console.log(`Package ${pkg} needs to be updated to match ${version} (found ${oneVersion})`)
   } else {
     console.log(`Package ${pkg} needs to be installed.`)
   }
