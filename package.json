@@ -1,6 +1,6 @@
 {
   "name": "yarn-lazy-lock",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tool to lock down the current dependence versions if they are enough for package.json.",
   "main": "src/index.js",
   "scripts": {
