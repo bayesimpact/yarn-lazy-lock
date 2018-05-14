@@ -10,15 +10,15 @@ const locks = lockfile.parse(fs.readFileSync('yarn.lock', 'utf-8')).object
 const packages = _.groupBy(Object.keys(locks), pkg => pkg.replace(/^@*(.*)@.*$/, '$1'))
 
 const {dependencies} = JSON.parse(fs.readFileSync('package.json', 'utf-8'))
-const missingVersions = _.toPairs(dependencies).
+const missingVersions = Object.entries(dependencies).
   // Filter package versions that are already accounted for.
   filter(([pkg, version]) => !locks[`${pkg}@${version}`])
 
 missingVersions.forEach(([pkg, version]) => {
-  const versionGoodEnough = (packages[pkg] ||[]).find(versionLocked =>
+  const versionGoodEnough = (packages[pkg] || []).find(versionLocked =>
     semver.satisfies(locks[versionLocked].version, version))
   if (versionGoodEnough) {
-    locks[version] = locks[versionGoodEnough]
+    locks[`${pkg}@${version}`] = locks[versionGoodEnough]
     return
   }
   if (packages[pkg]) {
