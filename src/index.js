@@ -7,7 +7,7 @@ const lockfile = require('@yarnpkg/lockfile')
 
 // Read lockfile.
 const locks = lockfile.parse(fs.readFileSync('yarn.lock', 'utf-8')).object
-const packages = _.groupBy(Object.keys(locks), pkg => pkg.replace(/^@*(.*)@.*$/, '$1'))
+const packages = _.groupBy(Object.keys(locks), pkg => pkg.replace(/^(.*)@.*$/, '$1'))
 
 const {dependencies} = JSON.parse(fs.readFileSync('package.json', 'utf-8'))
 const missingVersions = Object.entries(dependencies).
