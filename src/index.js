@@ -14,6 +14,7 @@ const missingVersions = Object.entries(dependencies).
   // Filter package versions that are already accounted for.
   filter(([pkg, version]) => !locks[`${pkg}@${version}`])
 
+let hasMissingVersion = false
 missingVersions.forEach(([pkg, version]) => {
   const versionGoodEnough = (packages[pkg] || []).find(versionLocked =>
     semver.satisfies(locks[versionLocked].version, version))
@@ -21,6 +22,7 @@ missingVersions.forEach(([pkg, version]) => {
     locks[`${pkg}@${version}`] = locks[versionGoodEnough]
     return
   }
+  hasMissingVersion = true
   if (packages[pkg]) {
     const oneVersion = locks[packages[pkg][0]].version
     console.log(`Package ${pkg} needs to be updated to match ${version} (found ${oneVersion})`)
@@ -31,3 +33,7 @@ missingVersions.forEach(([pkg, version]) => {
 
 // Save updated lockfile.
 fs.writeFileSync('yarn.lock', lockfile.stringify(locks), 'utf-8')
+
+if (hasMissingVersion && process.argv.includes('--fail-on-missing')) {
+  throw new Error('Some packages need to be installed or updated.')
+}
